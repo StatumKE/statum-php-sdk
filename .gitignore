@@ -1,7 +1,32 @@
+# Dependencies
 /vendor/
+composer.lock
+
+# Testing
 .phpunit.result.cache
+.phpunit.cache/
+
+# Environment
 .env
+.env.*
+
+# IDE / Editors
 .idea/
 .vscode/
-composer.lock
-phpunit.xml
+*.sublime-project
+*.sublime-workspace
+
+# AI Tools
+.gemini/
+.cursor/
+.aider*
+.claude/
+.copilot/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Build / Cache
+/build/
+*.cache
