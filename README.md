@@ -95,6 +95,40 @@ echo "Organization: " . $response->organization->name;
 echo "Available Balance: " . $response->organization->details->availableBalance;
 ```
 
+## API Response Format
+
+All API responses follow a consistent JSON structure:
+
+### Success Response (200)
+```json
+{
+    "status_code": 200,
+    "description": "Operation successful.",
+    "request_id": "35235f08c981474abd388755ed43a427"
+}
+```
+
+### Insufficient Funds (402)
+```json
+{
+    "status_code": 402,
+    "description": "Insufficient funds.",
+    "request_id": "ddc8fadc-f065-4736-aa91-14a42e36c1fa"
+}
+```
+
+### Validation Error (422)
+```json
+{
+    "status_code": 422,
+    "description": "Validation failed.",
+    "validation_errors": {
+        "phone_number": ["The phone number must be between 10 and 12 digits."]
+    },
+    "request_id": "207c5782-f2c6-4a5e-b893-bc7b74aea45f"
+}
+```
+
 ## Error Handling
 
 All errors throw a subclass of `Statum\Sdk\Exceptions\ApiException`.
