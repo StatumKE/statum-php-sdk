@@ -1,12 +1,19 @@
 {
     "name": "statum/statum-php-sdk",
     "description": "Official PHP SDK for Statum APIs (SMS, Airtime, Account)",
-    "keywords": ["statum", "sms", "airtime", "mpesa", "kenya", "payments"],
+    "keywords": [
+        "statum",
+        "sms",
+        "airtime",
+        "mpesa",
+        "kenya",
+        "payments"
+    ],
     "license": "MIT",
     "authors": [
         {
             "name": "Statum",
-            "email": "admin@statum.co.ke"
+            "email": "support@statum.co.ke"
         }
     ],
     "require": {

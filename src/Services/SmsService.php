@@ -20,10 +20,23 @@ class SmsService
      * @param string $senderId Your approved Sender ID.
      * @param string $message The message content.
      * @return ApiResponse
+     * @throws \InvalidArgumentException
      * @throws \Statum\Sdk\Exceptions\ApiException
      */
     public function sendSms(string $phoneNumber, string $senderId, string $message): ApiResponse
     {
+        if (!preg_match('/^\+?\d{10,15}$/', $phoneNumber)) {
+            throw new \InvalidArgumentException('Invalid phone number format. Must be in international format (e.g., +254712345678 or 254712345678).');
+        }
+
+        if (empty(trim($senderId))) {
+            throw new \InvalidArgumentException('Sender ID cannot be empty.');
+        }
+
+        if (empty(trim($message))) {
+            throw new \InvalidArgumentException('Message cannot be empty.');
+        }
+
         $response = $this->httpClient->request('POST', '/sms', [
             'json' => [
                 'phone_number' => $phoneNumber,

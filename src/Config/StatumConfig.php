@@ -11,7 +11,8 @@ class StatumConfig
     public function __construct(
         private readonly string $consumerKey,
         private readonly string $consumerSecret,
-        private readonly string $baseUrl = self::DEFAULT_BASE_URL
+        private readonly string $baseUrl = self::DEFAULT_BASE_URL,
+        private readonly float $timeout = 30.0
     ) {
     }
 
@@ -28,6 +29,11 @@ class StatumConfig
     public function getBaseUrl(): string
     {
         return rtrim($this->baseUrl, '/');
+    }
+
+    public function getTimeout(): float
+    {
+        return $this->timeout;
     }
 
     public function getAuthHeader(): string
