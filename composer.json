@@ -1,0 +1,38 @@
+{
+    "name": "statum/statum-php-sdk",
+    "description": "Official PHP SDK for Statum APIs (SMS, Airtime, Account)",
+    "keywords": ["statum", "sms", "airtime", "mpesa", "kenya", "payments"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Statum",
+            "email": "admin@statum.co.ke"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Statum\\Sdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Statum\\Sdk\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
