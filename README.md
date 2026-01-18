@@ -1,8 +1,5 @@
 # Statum PHP SDK
 
-[![Tests](https://github.com/statum/statum-php-sdk/actions/workflows/tests.yml/badge.svg)](https://github.com/statum/statum-php-sdk/actions/workflows/tests.yml)
-[![Latest Stable Version](https://poser.pugx.org/statum/statum-php-sdk/v/stable)](https://packagist.org/packages/statum/statum-php-sdk)
-[![License](https://poser.pugx.org/statum/statum-php-sdk/license)](https://packagist.org/packages/statum/statum-php-sdk)
 
 Official PHP SDK for Statum APIs (SMS, Airtime, Account). Built for enterprise usage with strict typing and immutable DTOs.
 
