@@ -21,7 +21,7 @@ class AccountService
      */
     public function getAccountDetails(): AccountDetailsResponse
     {
-        $response = $this->httpClient->request('GET', '/account-details');
+        $response = $this->httpClient->request('GET', 'account-details');
 
         return AccountDetailsResponse::fromArray($response);
     }

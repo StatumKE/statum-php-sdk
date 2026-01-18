@@ -18,7 +18,7 @@ class AirtimeServiceTest extends TestCase
         $httpClient = $this->createMock(HttpClient::class);
         $httpClient->expects($this->once())
             ->method('request')
-            ->with('POST', '/airtime', $this->arrayHasKey('json'))
+            ->with('POST', 'airtime', $this->arrayHasKey('json'))
             ->willReturn([
                 'status_code' => 200,
                 'description' => 'Operation successful.',

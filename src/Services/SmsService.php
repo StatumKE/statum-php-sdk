@@ -37,7 +37,7 @@ class SmsService
             throw new \InvalidArgumentException('Message cannot be empty.');
         }
 
-        $response = $this->httpClient->request('POST', '/sms', [
+        $response = $this->httpClient->request('POST', 'sms', [
             'json' => [
                 'phone_number' => $phoneNumber,
                 'sender_id' => $senderId,

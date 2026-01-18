@@ -28,7 +28,7 @@ class StatumConfig
 
     public function getBaseUrl(): string
     {
-        return rtrim($this->baseUrl, '/');
+        return rtrim($this->baseUrl, '/') . '/';
     }
 
     public function getTimeout(): float

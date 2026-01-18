@@ -33,7 +33,7 @@ class AirtimeService
             throw new \InvalidArgumentException('Amount must be between 5 and 10,000 KES.');
         }
 
-        $response = $this->httpClient->request('POST', '/airtime', [
+        $response = $this->httpClient->request('POST', 'airtime', [
             'json' => [
                 'phone_number' => $phoneNumber,
                 'amount' => $amount,

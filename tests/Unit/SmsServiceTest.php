@@ -17,7 +17,7 @@ class SmsServiceTest extends TestCase
         $httpClient = $this->createMock(HttpClient::class);
         $httpClient->expects($this->once())
             ->method('request')
-            ->with('POST', '/sms', $this->arrayHasKey('json'))
+            ->with('POST', 'sms', $this->arrayHasKey('json'))
             ->willReturn([
                 'status_code' => 200,
                 'description' => 'Operation successful.',

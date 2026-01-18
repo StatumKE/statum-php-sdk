@@ -33,7 +33,7 @@ class HttpClientTest extends TestCase
         $config = new StatumConfig('key', 'secret');
         $httpClient = new HttpClient($config, $client);
 
-        $response = $httpClient->request('GET', '/test');
+        $response = $httpClient->request('GET', 'test');
         $this->assertEquals(['foo' => 'bar'], $response);
     }
 
@@ -50,7 +50,7 @@ class HttpClientTest extends TestCase
         $httpClient = new HttpClient($config, $client);
 
         $this->expectException(AuthenticationException::class);
-        $httpClient->request('GET', '/test');
+        $httpClient->request('GET', 'test');
     }
 
     public function test_request_throws_authorization_exception(): void
@@ -66,7 +66,7 @@ class HttpClientTest extends TestCase
         $httpClient = new HttpClient($config, $client);
 
         $this->expectException(AuthorizationException::class);
-        $httpClient->request('GET', '/test');
+        $httpClient->request('GET', 'test');
     }
 
     public function test_request_throws_network_exception(): void
@@ -82,7 +82,7 @@ class HttpClientTest extends TestCase
         $httpClient = new HttpClient($config, $client);
 
         $this->expectException(NetworkException::class);
-        $httpClient->request('GET', '/test');
+        $httpClient->request('GET', 'test');
     }
 
     public function test_request_throws_api_exception_on_malformed_json(): void
@@ -98,7 +98,7 @@ class HttpClientTest extends TestCase
         $httpClient = new HttpClient($config, $client);
 
         $this->expectException(ApiException::class);
-        $httpClient->request('GET', '/test');
+        $httpClient->request('GET', 'test');
     }
 
     public function test_request_throws_validation_exception_on_422(): void
@@ -123,7 +123,7 @@ class HttpClientTest extends TestCase
         $httpClient = new HttpClient($config, $client);
 
         try {
-            $httpClient->request('POST', '/sms');
+            $httpClient->request('POST', 'sms');
             $this->fail('Expected ValidationException was not thrown.');
         } catch (ValidationException $e) {
             $this->assertEquals(422, $e->getCode());
