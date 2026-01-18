@@ -6,9 +6,12 @@
 
 Official PHP SDK for Statum APIs (SMS, Airtime, Account). Built for enterprise usage with strict typing and immutable DTOs.
 
-## Installation
+## Requirements
 
-You can install the package via composer:
+- PHP 8.2 or higher
+- Guzzle HTTP Client
+
+## Installation
 
 ```bash
 composer require statum/statum-php-sdk
@@ -27,16 +30,40 @@ $client = StatumClient::create(
 );
 ```
 
+### Configuration Options
+
+You can also customize the base URL and timeout:
+
+```php
+use Statum\Sdk\Config\StatumConfig;
+use Statum\Sdk\StatumClient;
+
+$config = new StatumConfig(
+    consumerKey: 'your_key',
+    consumerSecret: 'your_secret',
+    baseUrl: 'https://api.statum.co.ke/api/v2',  // Optional
+    timeout: 30.0  // Optional, in seconds
+);
+
+$client = new StatumClient($config);
+```
+
 ## Usage
+
+### Phone Number Formats
+
+The SDK accepts phone numbers in these formats:
+- `+254712345678` (with country code prefix)
+- `254712345678` (without + prefix)
 
 ### Airtime
 
-Send airtime to a phone number (KES).
+Send airtime to a phone number (KES 5 - 10,000).
 
 ```php
 $response = $client->airtime()->sendAirtime(
-    phoneNumber: '+254712345678',
-    amount: '100.00'
+    phoneNumber: '254712345678',
+    amount: '100'
 );
 
 echo "Request ID: " . $response->requestId;
@@ -49,7 +76,7 @@ Send an SMS message using an approved Sender ID.
 
 ```php
 $response = $client->sms()->sendSms(
-    phoneNumber: '+254712345678',
+    phoneNumber: '254712345678',
     senderId: 'STATUM',
     message: 'Hello from Statum SDK!'
 );
@@ -74,14 +101,24 @@ All errors throw a subclass of `Statum\Sdk\Exceptions\ApiException`.
 
 ```php
 use Statum\Sdk\Exceptions\AuthenticationException;
+use Statum\Sdk\Exceptions\ValidationException;
+use Statum\Sdk\Exceptions\NetworkException;
 use Statum\Sdk\Exceptions\ApiException;
 
 try {
-    $client->airtime()->sendAirtime('+254712345678', '10.00');
+    $client->airtime()->sendAirtime('254712345678', '100');
 } catch (AuthenticationException $e) {
-    // Handle invalid credentials
+    // Invalid credentials (401)
+} catch (ValidationException $e) {
+    // Validation errors from API (422)
+    echo "Request ID: " . $e->getRequestId();
+    foreach ($e->getValidationErrors() as $field => $errors) {
+        echo "$field: " . implode(', ', $errors);
+    }
+} catch (NetworkException $e) {
+    // Connection/timeout issues
 } catch (ApiException $e) {
-    // Handle general API errors
+    // General API errors
     echo "HTTP Status: " . $e->getCode();
     echo "Body: " . $e->getResponseBody();
 }
@@ -89,7 +126,7 @@ try {
 
 ## Laravel Integration
 
-You can easily bind the client in your `AppServiceProvider`.
+Bind the client in your `AppServiceProvider`:
 
 ```php
 public function register()
