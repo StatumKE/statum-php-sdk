@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-01-18
+
+### Fixed
+- Fixed critical URL resolution bug where Guzzle was stripping path segments (e.g., `/api/v2`) from the base URL, causing 404 errors.
+- Ensured base URL always ends with a trailing slash for proper relative path resolution.
+- Updated all service classes to use relative paths without leading slashes.
+
 ## [1.0.3] - 2026-01-18
 
 ### Fixed
