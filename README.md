@@ -1,7 +1,8 @@
 # Statum PHP SDK
 
-
 Official PHP SDK for Statum APIs (SMS, Airtime, Account). Built for enterprise usage with strict typing and immutable DTOs.
+
+[Full API Documentation](https://docs.statum.co.ke)
 
 ## Requirements
 
