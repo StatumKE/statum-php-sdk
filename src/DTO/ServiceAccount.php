@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Statum\Sdk\DTO;
 
-readonly class ServiceAccount
+class ServiceAccount
 {
     public function __construct(
-        public string $account,
-        public string $serviceName
+        public readonly string $account,
+        public readonly string $serviceName
     ) {
     }
 

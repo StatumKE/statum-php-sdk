@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Statum\Sdk\DTO;
 
-readonly class AccountDetailsResponse
+class AccountDetailsResponse
 {
     public function __construct(
-        public int $statusCode,
-        public string $description,
-        public string $requestId,
-        public Organization $organization
+        public readonly int $statusCode,
+        public readonly string $description,
+        public readonly string $requestId,
+        public readonly Organization $organization
     ) {
     }
 

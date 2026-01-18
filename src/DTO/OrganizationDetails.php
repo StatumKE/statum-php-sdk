@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Statum\Sdk\DTO;
 
-readonly class OrganizationDetails
+class OrganizationDetails
 {
     public function __construct(
-        public float $availableBalance,
-        public string $location,
-        public string $website,
-        public string $officeEmail,
-        public string $officeMobile,
-        public string $mpesaAccountTopUpCode
+        public readonly float $availableBalance,
+        public readonly string $location,
+        public readonly string $website,
+        public readonly string $officeEmail,
+        public readonly string $officeMobile,
+        public readonly string $mpesaAccountTopUpCode
     ) {
     }
 

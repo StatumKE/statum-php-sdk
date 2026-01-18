@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Statum\Sdk\DTO;
 
-readonly class ApiResponse
+class ApiResponse
 {
     public function __construct(
-        public int $statusCode,
-        public string $description,
-        public string $requestId
+        public readonly int $statusCode,
+        public readonly string $description,
+        public readonly string $requestId
     ) {
     }
 

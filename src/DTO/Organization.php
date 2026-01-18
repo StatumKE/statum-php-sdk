@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Statum\Sdk\DTO;
 
-readonly class Organization
+class Organization
 {
-    /**
-     * @param ServiceAccount[] $accounts
-     */
     public function __construct(
-        public string $name,
-        public OrganizationDetails $details,
-        public array $accounts
+        public readonly string $name,
+        public readonly OrganizationDetails $details,
+        /** @var ServiceAccount[] */
+        public readonly array $accounts
     ) {
     }
 
