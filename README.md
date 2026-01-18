@@ -6,7 +6,7 @@ Official PHP SDK for Statum APIs (SMS, Airtime, Account). Built for enterprise u
 
 ## Requirements
 
-- PHP 8.2 or higher
+- PHP 8.1 or higher
 - Guzzle HTTP Client
 
 ## Installation
