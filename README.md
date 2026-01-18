@@ -66,8 +66,9 @@ $response = $client->airtime()->sendAirtime(
     amount: '100'
 );
 
+echo "Status Code: " . $response->statusCode;
+echo "Description: " . $response->description;
 echo "Request ID: " . $response->requestId;
-echo "Status: " . $response->description;
 ```
 
 ### SMS
@@ -81,6 +82,8 @@ $response = $client->sms()->sendSms(
     message: 'Hello from Statum SDK!'
 );
 
+echo "Status Code: " . $response->statusCode;
+echo "Description: " . $response->description;
 echo "Request ID: " . $response->requestId;
 ```
 
@@ -91,8 +94,16 @@ Fetch organization and balance details.
 ```php
 $response = $client->account()->getAccountDetails();
 
+echo "Status Code: " . $response->statusCode;
 echo "Organization: " . $response->organization->name;
-echo "Available Balance: " . $response->organization->details->availableBalance;
+echo "Available Balance: KES " . $response->organization->details->availableBalance;
+echo "Website: " . $response->organization->details->website;
+echo "M-Pesa Top Up Code: " . $response->organization->details->mpesaAccountTopUpCode;
+
+// List service accounts
+foreach ($response->organization->accounts as $account) {
+    echo $account->account . " (" . $account->serviceName . ")";
+}
 ```
 
 ## API Response Format
@@ -126,6 +137,30 @@ All API responses follow a consistent JSON structure:
         "phone_number": ["The phone number must be between 10 and 12 digits."]
     },
     "request_id": "207c5782-f2c6-4a5e-b893-bc7b74aea45f"
+}
+```
+
+### Account Details Response (200)
+```json
+{
+    "status_code": 200,
+    "description": "Operation successful.",
+    "request_id": "5a45bc7b-bf99-49ae-b089-9daf5f4adbb0",
+    "organization": {
+        "name": "Statum Test",
+        "details": {
+            "available_balance": 695.15,
+            "location": "Nairobi - Westlands",
+            "website": "www.statum.co.ke",
+            "office_email": "admin@statum.co.ke",
+            "office_mobile": "+254722199199",
+            "mpesa_account_top_up_code": "B9E573"
+        },
+        "accounts": [
+            { "account": "Statum", "service_name": "sms" },
+            { "account": "CONNECT", "service_name": "sms" }
+        ]
+    }
 }
 ```
 
