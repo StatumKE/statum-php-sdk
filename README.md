@@ -17,7 +17,7 @@ composer require statum/statum-php-sdk
 
 ## Authentication
 
-The SDK uses HTTP Basic Authentication. You need your `consumerKey` and `consumerSecret` from the Statum Dashboard.
+The SDK uses HTTP Basic Authentication. You need your `consumerKey` and `consumerSecret` from the [Statum Dashboard](https://app.statum.co.ke/user).
 
 ```php
 use Statum\Sdk\StatumClient;
