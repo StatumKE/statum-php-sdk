@@ -1,201 +1,79 @@
-# Statum PHP SDK
+# Statum PHP SDK (SMS, Airtime, & Accounts)
 
-Official PHP SDK for Statum APIs (SMS, Airtime, Account). Built for enterprise usage with strict typing and immutable DTOs.
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://packagist.org/packages/statum/statum-php-sdk)
+[![Latest Stable Version](https://img.shields.io/packagist/v/statum/statum-php-sdk.svg)](https://packagist.org/packages/statum/statum-php-sdk)
+[![License](https://img.shields.io/github/license/StatumKE/statum-php-sdk.svg)](https://github.com/StatumKE/statum-php-sdk/blob/master/LICENSE)
 
-[Full API Documentation](https://docs.statum.co.ke)
+Official PHP SDK for Statum APIs. Built for secure, production-grade enterprise usage with strict typing, immutable DTOs, and framework-agnostic Guzzle HTTP integrations. Easily send SMS alerts, automate airtime disbursements, and query real-time account balances.
 
-## Requirements
+---
 
-- PHP 8.1 or higher
-- Guzzle HTTP Client
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start in 2 Minutes](#quick-start-in-2-minutes)
+  - [1. Plain PHP Setup](#1-plain-php-setup)
+  - [2. Laravel Setup](#2-laravel-setup)
+- [Core Integration Examples](#core-integration-examples)
+  - [Account Details](#account-details)
+  - [Sending SMS](#sending-sms)
+  - [Disbursing Airtime](#disbursing-airtime)
+- [Error & Exception Handling](#error--exception-handling)
+- [API JSON Payload Specifications](#api-json-payload-specifications)
+- [Integration Guidelines & Gotchas](#integration-guidelines--gotchas)
+- [Running Tests](#running-tests)
+- [License](#license)
+
+---
+
+## Features
+
+- **Type-Safe Constructors**: Parameter validation happens locally inside the SDK before outgoing HTTP calls.
+- **Service-Oriented Design**: Clean division between SMS, Airtime, and Account APIs.
+- **Framework Agnostic**: Works out of the box in plain scripts, Symfony, or Laravel.
+- **Extensive Exception Handling**: Maps specific HTTP status codes (e.g. 401, 402, 422) to concrete PHP exception classes.
+- **Strict Typing**: Full compatibility with PHP 8.1+ strict mode.
+
+---
 
 ## Installation
+
+Install the package via Composer:
 
 ```bash
 composer require statum/statum-php-sdk
 ```
 
-## Authentication
+---
 
-The SDK uses HTTP Basic Authentication. You need your `consumerKey` and `consumerSecret` from the [Statum Dashboard](https://app.statum.co.ke/user).
+## Quick Start in 2 Minutes
+
+Ensure your credentials are saved in your `.env` or system environment:
+
+```env
+STATUM_CONSUMER_KEY=your-consumer-key
+STATUM_CONSUMER_SECRET=your-consumer-secret
+```
+
+### 1. Plain PHP Setup
 
 ```php
 use Statum\Sdk\StatumClient;
 
 $client = StatumClient::create(
-    consumerKey: 'your_consumer_key',
-    consumerSecret: 'your_consumer_secret'
+    consumerKey: $_ENV['STATUM_CONSUMER_KEY'],
+    consumerSecret: $_ENV['STATUM_CONSUMER_SECRET']
 );
 ```
 
-### Configuration Options
+### 2. Laravel Setup
 
-You can also customize the base URL and timeout:
+Register the client as a singleton inside your `AppServiceProvider.php`:
 
 ```php
-use Statum\Sdk\Config\StatumConfig;
 use Statum\Sdk\StatumClient;
 
-$config = new StatumConfig(
-    consumerKey: 'your_key',
-    consumerSecret: 'your_secret',
-    baseUrl: 'https://api.statum.co.ke/api/v2',  // Optional
-    timeout: 30.0  // Optional, in seconds
-);
-
-$client = new StatumClient($config);
-```
-
-## Usage
-
-### Phone Number Formats
-
-The SDK accepts phone numbers in these formats:
-- `+254712345678` (with country code prefix)
-- `254712345678` (without + prefix)
-
-### Airtime
-
-Send airtime to a phone number (KES 5 - 10,000).
-
-```php
-$response = $client->airtime()->sendAirtime(
-    phoneNumber: '254712345678',
-    amount: '100'
-);
-
-echo "Status Code: " . $response->statusCode;
-echo "Description: " . $response->description;
-echo "Request ID: " . $response->requestId;
-```
-
-### SMS
-
-Send an SMS message using an approved Sender ID.
-
-```php
-$response = $client->sms()->sendSms(
-    phoneNumber: '254712345678',
-    senderId: 'STATUM',
-    message: 'Hello from Statum SDK!'
-);
-
-echo "Status Code: " . $response->statusCode;
-echo "Description: " . $response->description;
-echo "Request ID: " . $response->requestId;
-```
-
-### Account Details
-
-Fetch organization and balance details.
-
-```php
-$response = $client->account()->getAccountDetails();
-
-echo "Status Code: " . $response->statusCode;
-echo "Organization: " . $response->organization->name;
-echo "Available Balance: KES " . $response->organization->details->availableBalance;
-echo "Website: " . $response->organization->details->website;
-echo "M-Pesa Top Up Code: " . $response->organization->details->mpesaAccountTopUpCode;
-
-// List service accounts
-foreach ($response->organization->accounts as $account) {
-    echo $account->account . " (" . $account->serviceName . ")";
-}
-```
-
-## API Response Format
-
-All API responses follow a consistent JSON structure:
-
-### Success Response (200)
-```json
-{
-    "status_code": 200,
-    "description": "Operation successful.",
-    "request_id": "35235f08c981474abd388755ed43a427"
-}
-```
-
-### Insufficient Funds (402)
-```json
-{
-    "status_code": 402,
-    "description": "Insufficient funds.",
-    "request_id": "ddc8fadc-f065-4736-aa91-14a42e36c1fa"
-}
-```
-
-### Validation Error (422)
-```json
-{
-    "status_code": 422,
-    "description": "Validation failed.",
-    "validation_errors": {
-        "phone_number": ["The phone number must be between 10 and 12 digits."]
-    },
-    "request_id": "207c5782-f2c6-4a5e-b893-bc7b74aea45f"
-}
-```
-
-### Account Details Response (200)
-```json
-{
-    "status_code": 200,
-    "description": "Operation successful.",
-    "request_id": "5a45bc7b-bf99-49ae-b089-9daf5f4adbb0",
-    "organization": {
-        "name": "Statum Test",
-        "details": {
-            "available_balance": 695.15,
-            "location": "Nairobi - Westlands",
-            "website": "www.statum.co.ke",
-            "office_email": "admin@statum.co.ke",
-            "office_mobile": "+254722199199",
-            "mpesa_account_top_up_code": "B9E573"
-        },
-        "accounts": [
-            { "account": "Statum", "service_name": "sms" },
-            { "account": "CONNECT", "service_name": "sms" }
-        ]
-    }
-}
-```
-
-## Error Handling
-
-All errors throw a subclass of `Statum\Sdk\Exceptions\ApiException`.
-
-```php
-use Statum\Sdk\Exceptions\AuthenticationException;
-use Statum\Sdk\Exceptions\ValidationException;
-use Statum\Sdk\Exceptions\NetworkException;
-use Statum\Sdk\Exceptions\ApiException;
-
-try {
-    $client->airtime()->sendAirtime('254712345678', '100');
-} catch (AuthenticationException $e) {
-    // Invalid credentials (401)
-} catch (ValidationException $e) {
-    // Validation errors from API (422)
-    echo "Request ID: " . $e->getRequestId();
-    foreach ($e->getValidationErrors() as $field => $errors) {
-        echo "$field: " . implode(', ', $errors);
-    }
-} catch (NetworkException $e) {
-    // Connection/timeout issues
-} catch (ApiException $e) {
-    // General API errors
-    echo "HTTP Status: " . $e->getCode();
-    echo "Body: " . $e->getResponseBody();
-}
-```
-
-## Laravel Integration
-
-Bind the client in your `AppServiceProvider`:
-
-```php
 public function register()
 {
     $this->app->singleton(StatumClient::class, function ($app) {
@@ -207,10 +85,221 @@ public function register()
 }
 ```
 
-## Security
+Now type-hint `StatumClient` in any controller or job to inject the initialized client:
 
-Please review [SECURITY.md](SECURITY.md) for vulnerability reporting. Credentials should never be hardcoded; use environment variables.
+```php
+use Statum\Sdk\StatumClient;
+
+class SmsController extends Controller
+{
+    public function __construct(private readonly StatumClient $client) {}
+
+    public function send() {
+        // Ready to make type-safe calls!
+    }
+}
+```
+
+---
+
+## Core Integration Examples
+
+### Account Details
+
+Fetch organization profile, available balances, and service configuration:
+
+```php
+$response = $client->account()->getAccountDetails();
+
+echo "Status Code: " . $response->statusCode . "\n";
+echo "Organization: " . $response->organization->name . "\n";
+echo "Available Balance: KES " . $response->organization->details->availableBalance . "\n";
+
+// List registered services and account codes
+foreach ($response->organization->accounts as $account) {
+    echo "Service: " . $account->serviceName . " | Code: " . $account->account . "\n";
+}
+```
+
+### Sending SMS
+
+Send transactional or promotional SMS alerts to a recipient phone number:
+
+```php
+$response = $client->sms()->sendSms(
+    phoneNumber: '254721553678', // Recipient phone number in international format
+    senderId: 'STHERESACWA',     // Your approved Sender ID
+    message: 'Hello! This is a secure notification from Statum SDK.'
+);
+
+echo "Status Code: " . $response->statusCode . "\n";
+echo "Description: " . $response->description . "\n";
+echo "Request ID: " . $response->requestId . "\n";
+```
+
+### Disbursing Airtime
+
+Disburse airtime rewards or incentives (supports amounts from KES 5 to KES 10,000):
+
+```php
+$response = $client->airtime()->sendAirtime(
+    phoneNumber: '254721553678',
+    amount: '100' // Amount must be passed as a string representation
+);
+
+echo "Status Code: " . $response->statusCode . "\n";
+echo "Description: " . $response->description . "\n";
+echo "Request ID: " . $response->requestId . "\n";
+```
+
+---
+
+## Error & Exception Handling
+
+The SDK maps HTTP responses to concrete exception classes that inherit from `Statum\Sdk\Exceptions\ApiException`.
+
+```php
+use Statum\Sdk\Exceptions\AuthenticationException;
+use Statum\Sdk\Exceptions\ValidationException;
+use Statum\Sdk\Exceptions\NetworkException;
+use Statum\Sdk\Exceptions\ApiException;
+
+try {
+    $response = $client->sms()->sendSms('2547XXXXXXXX', 'SENDERID', 'Message');
+} catch (AuthenticationException $e) {
+    // Credentials failed validation (HTTP 401)
+    echo "Auth Failure: Check Consumer Key and Secret.";
+} catch (ValidationException $e) {
+    // API-side validation parameters failed (HTTP 422)
+    echo "Request ID: " . $e->getRequestId() . "\n";
+    foreach ($e->getValidationErrors() as $field => $errors) {
+        echo "Field '$field' errors: " . implode(', ', $errors) . "\n";
+    }
+} catch (NetworkException $e) {
+    // DNS, timeouts, or connection failures
+    echo "Connection error: " . $e->getMessage();
+} catch (ApiException $e) {
+    // General API errors (e.g. 402 Insufficient Funds, 500 Server Error)
+    echo "HTTP Status Code: " . $e->getCode() . "\n";
+    echo "Error Body: " . $e->getResponseBody() . "\n";
+}
+```
+
+---
+
+## API JSON Payload Specifications
+
+Here are the wire-level JSON schemas transmitted and returned by the APIs under the hood:
+
+### 1. SMS API
+* **Endpoint**: `POST /sms`
+* **Headers**: `Authorization: Basic <base64(key:secret)>`
+
+<details>
+<summary><b>JSON Request</b></summary>
+
+```json
+{
+  "phone_number": "254721553678",
+  "sender_id": "STHERESACWA",
+  "message": "Hello from Statum SDK!"
+}
+```
+</details>
+
+<details>
+<summary><b>JSON Response (Success - 200)</b></summary>
+
+```json
+{
+  "status_code": 200,
+  "description": "Operation successful.",
+  "request_id": "d173a8b3-0f3a-463f-8a03-29826b9a2d78"
+}
+```
+</details>
+
+---
+
+### 2. Airtime API
+* **Endpoint**: `POST /airtime`
+
+<details>
+<summary><b>JSON Request</b></summary>
+
+```json
+{
+  "phone_number": "254721553678",
+  "amount": "100"
+}
+```
+</details>
+
+<details>
+<summary><b>JSON Response (Success - 200)</b></summary>
+
+```json
+{
+  "status_code": 200,
+  "description": "Operation successful.",
+  "request_id": "6e0213d5-6df9-47bf-ba2d-9b9470d96854"
+}
+```
+</details>
+
+---
+
+### 3. Account Details API
+* **Endpoint**: `GET /account-details`
+
+<details>
+<summary><b>JSON Response (Success - 200)</b></summary>
+
+```json
+{
+  "status_code": 200,
+  "description": "Operation successful.",
+  "request_id": "5a45bc7b-bf99-49ae-b089-9daf5f4adbb0",
+  "organization": {
+    "name": "Statum Test",
+    "details": {
+      "available_balance": 695.15,
+      "location": "Nairobi - Westlands",
+      "website": "www.statum.co.ke",
+      "office_email": "admin@statum.co.ke",
+      "office_mobile": "+254722199199",
+      "mpesa_account_top_up_code": "B9E573"
+    },
+    "accounts": [
+      { "account": "Statum", "service_name": "sms" },
+      { "account": "CONNECT", "service_name": "sms" }
+    ]
+  }
+}
+```
+</details>
+
+---
+
+## Integration Guidelines & Gotchas
+
+1. **Sender ID Approval**: SMS requests will throw an HTTP 422 `ValidationException` if the `senderId` is not registered and approved under your Statum account profile.
+2. **Phone Number Formatting**: Ensure phone numbers are passed in the international format (with or without `+` prefix), e.g. `254721553678` or `+254721553678`.
+3. **Airtime Limits**: Airtime amounts must be passed as **strings** (e.g. `'100'`) and must fall strictly within the KES 5 to KES 10,000 range per transaction.
+
+---
+
+## Running Tests
+
+Ensure PHPUnit is configured and run:
+
+```bash
+composer install
+composer test
+```
+
+---
 
 ## License
 
-The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
