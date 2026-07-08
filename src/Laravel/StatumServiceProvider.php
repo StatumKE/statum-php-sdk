@@ -21,14 +21,16 @@ final class StatumServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(StatumClient::class, static function ($app) {
-            $config = new StatumConfig(
-                consumerKey: (string) $app['config']['statum.consumer_key'],
-                consumerSecret: (string) $app['config']['statum.consumer_secret'],
-                baseUrl: (string) $app['config']['statum.base_url'],
-                timeout: (float) $app['config']['statum.timeout']
+            $config = $app['config']->get('statum', []);
+
+            $sdkConfig = new StatumConfig(
+                consumerKey: (string) ($config['consumer_key'] ?? ''),
+                consumerSecret: (string) ($config['consumer_secret'] ?? ''),
+                baseUrl: (string) ($config['base_url'] ?? 'https://api.statum.co.ke/api/v2'),
+                timeout: (float) ($config['timeout'] ?? 30.0)
             );
 
-            return new StatumClient($config);
+            return new StatumClient($sdkConfig);
         });
     }
 
