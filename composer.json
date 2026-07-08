@@ -36,6 +36,13 @@
     "scripts": {
         "test": "vendor/bin/phpunit"
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Statum\\Sdk\\Laravel\\StatumServiceProvider"
+            ]
+        }
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {

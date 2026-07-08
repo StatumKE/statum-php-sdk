@@ -79,20 +79,19 @@ $client = StatumClient::create(
 
 ### 2. Laravel Setup
 
-Register the client as a singleton inside your `AppServiceProvider.php`:
+The SDK supports package auto-discovery in Laravel. To configure it, publish the configuration file:
 
-```php
-use Statum\Sdk\StatumClient;
+```bash
+php artisan vendor:publish --tag=statum-config
+```
 
-public function register()
-{
-    $this->app->singleton(StatumClient::class, function ($app) {
-        return StatumClient::create(
-            config('services.statum.key'),
-            config('services.statum.secret')
-        );
-    });
-}
+This will create a `config/statum.php` file. You can configure your credentials via your `.env` file:
+
+```env
+STATUM_CONSUMER_KEY=your-consumer-key
+STATUM_CONSUMER_SECRET=your-consumer-secret
+STATUM_BASE_URL=https://api.statum.co.ke/api/v2
+STATUM_TIMEOUT=30.0
 ```
 
 Now type-hint `StatumClient` in any controller or job to inject the initialized client:
