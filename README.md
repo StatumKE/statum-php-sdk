@@ -11,6 +11,7 @@ Official PHP SDK for Statum APIs. Built for secure, production-grade enterprise 
 ## Table of Contents
 
 - [Features](#features)
+- [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Quick Start in 2 Minutes](#quick-start-in-2-minutes)
   - [1. Plain PHP Setup](#1-plain-php-setup)
@@ -34,6 +35,15 @@ Official PHP SDK for Statum APIs. Built for secure, production-grade enterprise 
 - **Framework Agnostic**: Works out of the box in plain scripts, Symfony, or Laravel.
 - **Extensive Exception Handling**: Maps specific HTTP status codes (e.g. 401, 402, 422) to concrete PHP exception classes.
 - **Strict Typing**: Full compatibility with PHP 8.1+ strict mode.
+
+---
+
+## Getting Started
+
+1. **Sign up for a Statum account**: [app.statum.co.ke](https://app.statum.co.ke)
+2. **Get your API credentials**: Retrieve your Consumer Key and Consumer Secret from the [Statum Dashboard](https://app.statum.co.ke/user).
+3. **Read the full API documentation**: [docs.statum.co.ke](https://docs.statum.co.ke)
+4. **Install the SDK**: Follow the [Installation](#installation) guidelines below.
 
 ---
 
@@ -128,7 +138,7 @@ Send transactional or promotional SMS alerts to a recipient phone number:
 ```php
 $response = $client->sms()->sendSms(
     phoneNumber: '254721553678', // Recipient phone number in international format
-    senderId: 'STHERESACWA',     // Your approved Sender ID
+    senderId: 'STATUM',     // Your approved Sender ID
     message: 'Hello! This is a secure notification from Statum SDK.'
 );
 
@@ -201,7 +211,7 @@ Here are the wire-level JSON schemas transmitted and returned by the APIs under 
 ```json
 {
   "phone_number": "254721553678",
-  "sender_id": "STHERESACWA",
+  "sender_id": "STATUM",
   "message": "Hello from Statum SDK!"
 }
 ```
